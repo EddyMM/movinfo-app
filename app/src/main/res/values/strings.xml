@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Movinfo</string>
+    <string name="splashImageContentDescription">App Icon</string>
+    <string name="splash_message">Discover the most popular movies</string>
+    <string name="next">Start</string>
+    <string name="start">Start</string>
+    <string name="startDescription">Start</string>
+</resources>
