@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.splash;
+package com.movinfo.movinfo.ui.splash.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.ui.movies.MoviesListActivity;
+import com.movinfo.movinfo.ui.splash.presenter.SplashMvpPresenter;
+import com.movinfo.movinfo.ui.splash.presenter.SplashPresenter;
 
 import timber.log.Timber;
 

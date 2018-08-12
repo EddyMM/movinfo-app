@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.splash;
+package com.movinfo.movinfo.ui.splash.view;
 
 import android.support.v4.app.Fragment;
 

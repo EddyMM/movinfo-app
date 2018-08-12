@@ -1,6 +1,6 @@
-package com.movinfo.movinfo.ui.splash;
+package com.movinfo.movinfo.ui.splash.presenter;
 
-import android.view.View;
+import com.movinfo.movinfo.ui.splash.view.SplashMvpView;
 
 /**
  *
