@@ -11,7 +11,7 @@ import com.movinfo.movinfo.R;
  * Base activity that hosts a single fragment
  */
 
-public abstract class SingleFragmentActivity extends AppCompatActivity {
+public abstract class SingleFragmentActivity extends BaseActivity {
     protected abstract Fragment createFragment();
 
     @Override

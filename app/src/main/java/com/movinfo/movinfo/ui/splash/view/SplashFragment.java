@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.ui.movies.MoviesListActivity;
 import com.movinfo.movinfo.ui.splash.presenter.SplashMvpPresenter;
-import com.movinfo.movinfo.ui.splash.presenter.SplashPresenter;
+
+import javax.inject.Inject;
 
 import timber.log.Timber;
 
@@ -21,18 +22,21 @@ import timber.log.Timber;
  */
 
 public class SplashFragment extends Fragment implements SplashMvpView {
+
+    @Inject
+    SplashMvpPresenter<SplashMvpView> splashPresenter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
+        // Create presenter and attach mvp view
+        splashPresenter.onAttach(this);
+
         View v = inflater.inflate(R.layout.splash_fragment, container, false);
 
-        // Plant timber tree for logging
-        Timber.plant(new Timber.DebugTree());
-
-        // Create presenter and attach mvp view
-        SplashMvpPresenter<SplashMvpView> splashPresenter = new SplashPresenter<>();
-        splashPresenter.onAttach(this);
+        // Inject member variables with objects
+        ((SplashActivity) requireActivity()).getActivityComponent().inject(this);
 
         // Handle the start text and arrow using the same click listener
         Group startViews = v.findViewById(R.id.startGroup);
@@ -49,5 +53,10 @@ public class SplashFragment extends Fragment implements SplashMvpView {
     @Override
     public void openMoviesList() {
         startActivity(MoviesListActivity.getIntent(this.getContext()));
+    }
+
+    @Override
+    public void close() {
+        requireActivity().finish();
     }
 }
