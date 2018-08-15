@@ -36,9 +36,4 @@ public class SplashPresenter<SplashView extends SplashMvpView> extends BasePrese
             mSplashView.close();
         }
     }
-
-    @Override
-    public void onDetach() {
-
-    }
 }

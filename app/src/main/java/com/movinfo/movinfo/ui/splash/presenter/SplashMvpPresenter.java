@@ -11,6 +11,4 @@ public interface SplashMvpPresenter<SplashView extends SplashMvpView> {
     void onSplashStartClick();
 
     void onAttach(SplashView mvpView);
-
-    void onDetach();
 }

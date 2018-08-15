@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies;
+package com.movinfo.movinfo.ui.movies.view;
 
 import android.content.Context;
 import android.content.Intent;
