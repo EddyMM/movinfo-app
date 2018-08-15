@@ -1,9 +1,6 @@
 package com.movinfo.movinfo.ui.splash.presenter;
 
-import android.support.v7.app.AppCompatActivity;
-
 import com.movinfo.movinfo.data.DataManager;
-import com.movinfo.movinfo.data.preferences.AppPreferencesHelper;
 import com.movinfo.movinfo.ui.base.BasePresenter;
 import com.movinfo.movinfo.ui.splash.view.SplashMvpView;
 
@@ -19,7 +16,7 @@ public class SplashPresenter<SplashView extends SplashMvpView> extends BasePrese
     private SplashView mSplashView;
 
     @Inject
-    public SplashPresenter(DataManager dataManager) {
+    SplashPresenter(DataManager dataManager) {
         super(dataManager);
     }
 
@@ -36,6 +33,7 @@ public class SplashPresenter<SplashView extends SplashMvpView> extends BasePrese
         mSplashView = mvpView;
         if (getDataManager().wasSplashScreenSeen()) {
             mSplashView.openMoviesList();
+            mSplashView.close();
         }
     }
 

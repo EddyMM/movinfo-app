@@ -30,13 +30,12 @@ public class SplashFragment extends Fragment implements SplashMvpView {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
+        // Inject member variables with objects
+        ((SplashActivity) requireActivity()).getActivityComponent().inject(this);
         // Create presenter and attach mvp view
         splashPresenter.onAttach(this);
 
         View v = inflater.inflate(R.layout.splash_fragment, container, false);
-
-        // Inject member variables with objects
-        ((SplashActivity) requireActivity()).getActivityComponent().inject(this);
 
         // Handle the start text and arrow using the same click listener
         Group startViews = v.findViewById(R.id.startGroup);
