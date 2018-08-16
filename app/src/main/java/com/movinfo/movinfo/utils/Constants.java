@@ -11,5 +11,9 @@ public class Constants {
 
     public static String MOVIE_DB_API_BASE_URL = "https://api.themoviedb.org/3/";
 
+    public static String MOVIE_DB_POSTER_URL = "http://image.tmdb.org/t/p/w185_and_h278_bestv2/";
+
     public static String API_KEY_REQUEST_KEY = "api_key";
+
+    public static int MOVIES_LIST_NO_OF_COLUMNS = 2;
 }

@@ -9,7 +9,7 @@ import java.util.Date;
  *
  */
 
-public class MovieResponse {
+public class Movie {
     @SerializedName("poster_url")
     private String posterUrl;
     @SerializedName("vote_count")
@@ -39,7 +39,7 @@ public class MovieResponse {
     @SerializedName("release_date")
     private Date releaseDate;
 
-    public MovieResponse(String posterUrl, int voteCount, String movieId, float voteAverage,
+    public Movie(String posterUrl, int voteCount, String movieId, float voteAverage,
             String title, float popularity, String posterPath, String originalLanguage,
             String originalTitle, ArrayList<String> genreIds, String backdropPath, boolean adult,
             String overview, Date releaseDate) {

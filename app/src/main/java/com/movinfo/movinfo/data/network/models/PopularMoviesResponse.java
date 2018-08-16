@@ -20,10 +20,10 @@ public class PopularMoviesResponse {
     String totalPages;
     @SerializedName("results")
     private
-    List<MovieResponse> results;
+    List<Movie> results;
 
     public PopularMoviesResponse(String page, String totalResults, String totalPages,
-            List<MovieResponse> results) {
+            List<Movie> results) {
         this.page = page;
         this.totalResults = totalResults;
         this.totalPages = totalPages;
@@ -42,7 +42,7 @@ public class PopularMoviesResponse {
         return totalPages;
     }
 
-    public List<MovieResponse> getResults() {
+    public List<Movie> getResults() {
         return results;
     }
 }

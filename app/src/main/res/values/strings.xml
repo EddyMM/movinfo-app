@@ -5,4 +5,5 @@
     <string name="next">Start</string>
     <string name="start">Start</string>
     <string name="startDescription">Start</string>
+    <string name="movie_poster_description">Movie Poster</string>
 </resources>

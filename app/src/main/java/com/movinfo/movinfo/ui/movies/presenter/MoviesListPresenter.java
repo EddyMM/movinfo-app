@@ -15,7 +15,7 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 /**
- *
+ * Handle presentation logic of movies list view
  */
 
 public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
@@ -35,6 +35,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
 
     @Override
     public void onFetchMoviesList() {
+        mMoviesListView.showProgressBar();
         getDataManager().getPopularMovies(
                 new Callback<PopularMoviesResponse>() {
                     @Override
@@ -44,6 +45,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
 
                         PopularMoviesResponse popularMoviesResponse = response.body();
                         if (popularMoviesResponse != null) {
+                            mMoviesListView.hideProgressBar();
                             mMoviesListView.displayMovies(popularMoviesResponse.getResults());
                         } else {
                             Timber.e("No movies were fetched");
@@ -53,6 +55,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     @Override
                     public void onFailure(@NonNull Call<PopularMoviesResponse> call,
                             @NonNull Throwable t) {
+                        mMoviesListView.hideProgressBar();
                         Timber.e("Error fetching popular movies: " + t.getMessage());
                         t.printStackTrace();
                     }

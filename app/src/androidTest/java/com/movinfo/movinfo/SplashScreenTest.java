@@ -29,7 +29,7 @@ public class SplashScreenTest {
     public void testStartText() {
         onView(withId(R.id.startTextView))
                 .perform(click());
-        onView(withId(R.id.moviesListTextView))
+        onView(withId(R.id.moviesListRecyclerView))
                 .check(matches(isDisplayed()));
     }
 
@@ -37,7 +37,7 @@ public class SplashScreenTest {
     public void testStartImage() {
         onView(withId(R.id.startImageView))
                 .perform(click());
-        onView(withId(R.id.moviesListTextView))
+        onView(withId(R.id.moviesListRecyclerView))
                 .check(matches(isDisplayed()));
     }
 }
