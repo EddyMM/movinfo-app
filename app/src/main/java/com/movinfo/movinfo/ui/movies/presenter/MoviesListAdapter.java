@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.movinfo.movinfo.BuildConfig;
@@ -65,16 +66,27 @@ public class MoviesListAdapter extends
 
         void bind(Movie movie) {
             // Bind UI with data
+
+            // Poster
             ImageView moviePosterImageView = itemView.findViewById(R.id.moviePosterImageView);
             String posterPath = Constants.MOVIE_DB_POSTER_URL + movie.getPosterPath()
                     + "?api_key=" + BuildConfig.TheMovieDbApiToken;
-            Timber.d("Poster path: " + posterPath);
             Picasso.get().load(posterPath)
                     .error(R.drawable.ic_launcher_foreground)
                     .into(moviePosterImageView);
 
+            // Title
             TextView movieTitleTextView = itemView.findViewById(R.id.movieTitleTextView);
             movieTitleTextView.setText(movie.getTitle());
+
+            // Rating
+            RatingBar movieRatingBar = itemView.findViewById(R.id.movieRatingBar);
+            float rating  = 5 * (movie.getVoteAverage() / 10);
+            movieRatingBar.setRating(rating);
+
+            // Vote counts
+            TextView voteCountsTextView = itemView.findViewById(R.id.movieVoteCountsTextView);
+            voteCountsTextView.setText("" + movie.getVoteCount());
         }
     }
 
