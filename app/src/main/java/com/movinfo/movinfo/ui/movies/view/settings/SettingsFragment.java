@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies.view;
+package com.movinfo.movinfo.ui.movies.view.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -59,7 +59,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference.getKey().equals(getString(R.string.sort_order_key))) {
-            Toast.makeText(getContext(), "You should sort by " + newValue.toString(),
+            Toast.makeText(getContext(), "Movies will be sorted by " + newValue.toString(),
                     Toast.LENGTH_LONG).show();
             return true;
         }

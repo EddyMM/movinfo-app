@@ -3,9 +3,12 @@ package com.movinfo.movinfo.ui.movies.presenter;
 import android.support.annotation.NonNull;
 
 import com.movinfo.movinfo.data.DataManager;
+import com.movinfo.movinfo.data.network.models.Movie;
 import com.movinfo.movinfo.data.network.models.PopularMoviesResponse;
 import com.movinfo.movinfo.ui.base.BasePresenter;
 import com.movinfo.movinfo.ui.movies.view.MoviesListMvpView;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -34,7 +37,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
     }
 
     @Override
-    public void onFetchMoviesList() {
+    public void onFetchMoviesList(@NonNull String sortOrder) {
         mMoviesListView.showProgressBar();
         getDataManager().getPopularMovies(
                 new Callback<PopularMoviesResponse>() {
@@ -46,7 +49,8 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                         PopularMoviesResponse popularMoviesResponse = response.body();
                         if (popularMoviesResponse != null) {
                             mMoviesListView.hideProgressBar();
-                            mMoviesListView.displayMovies(popularMoviesResponse.getResults());
+                            List<Movie> movies = popularMoviesResponse.getResults();
+                            mMoviesListView.displayMovies(movies, sortOrder);
                         } else {
                             Timber.e("No movies were fetched");
                         }

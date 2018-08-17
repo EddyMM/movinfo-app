@@ -1,5 +1,7 @@
 package com.movinfo.movinfo.ui.movies.view;
 
+import android.support.annotation.NonNull;
+
 import com.movinfo.movinfo.data.network.models.Movie;
 
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.List;
  */
 
 public interface MoviesListMvpView {
-    void displayMovies(List<Movie> movies);
+    void displayMovies(@NonNull List<Movie> movies, @NonNull String sortOrder);
 
     void showProgressBar();
 

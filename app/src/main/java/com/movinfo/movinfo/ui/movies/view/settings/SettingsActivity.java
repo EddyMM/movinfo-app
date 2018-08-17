@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies.view;
+package com.movinfo.movinfo.ui.movies.view.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

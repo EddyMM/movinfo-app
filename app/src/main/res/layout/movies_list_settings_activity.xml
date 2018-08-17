@@ -2,6 +2,6 @@
 <fragment
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/movies_list_settings_fragment"
-    android:name="com.movinfo.movinfo.ui.movies.view.SettingsFragment"
+    android:name="com.movinfo.movinfo.ui.movies.view.settings.SettingsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />

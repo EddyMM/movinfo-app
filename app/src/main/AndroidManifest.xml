@@ -27,7 +27,7 @@
             android:launchMode="singleTop" />
 
         <activity
-            android:name=".ui.movies.view.SettingsActivity"
+            android:name=".ui.movies.view.settings.SettingsActivity"
             android:label="@string/action_settings"
             android:parentActivityName=".ui.movies.view.MoviesListActivity"
             tools:targetApi="jelly_bean">
