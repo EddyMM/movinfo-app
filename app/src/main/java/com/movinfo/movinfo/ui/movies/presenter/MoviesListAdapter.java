@@ -13,16 +13,10 @@ import android.widget.TextView;
 import com.movinfo.movinfo.BuildConfig;
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
-import com.movinfo.movinfo.ui.movies.view.comparators.MoviePopularityComparator;
-import com.movinfo.movinfo.ui.movies.view.comparators.MovieRatingComparator;
 import com.movinfo.movinfo.utils.Constants;
 import com.squareup.picasso.Picasso;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-
-import timber.log.Timber;
 
 /**
  *
@@ -55,7 +49,13 @@ public class MoviesListAdapter extends
 
     @Override
     public int getItemCount() {
-        return mMovies.size();
+        int noOfMovies = 0;
+
+        if (mMovies != null) {
+            noOfMovies = mMovies.size();
+        }
+
+        return noOfMovies;
     }
 
     class MoviesListViewHolder extends RecyclerView.ViewHolder {
@@ -86,28 +86,15 @@ public class MoviesListAdapter extends
 
             // Vote counts
             TextView voteCountsTextView = itemView.findViewById(R.id.movieVoteCountsTextView);
-            voteCountsTextView.setText("" + movie.getVoteCount());
+            voteCountsTextView.setText(String.format("%s", movie.getVoteCount()));
         }
+    }
+
+    public void setMovies(List<Movie> movies) {
+        mMovies = movies;
     }
 
     public List<Movie> getMovies() {
         return mMovies;
-    }
-
-    /**
-     * Orders movies by some criteria (popularity or rating)
-     * @param sortOrder Sorting criteria
-     */
-    public void orderMoviesBy(String sortOrder) {
-        // Assume order by popularity by default
-        Comparator<Movie> movieComparator = new MoviePopularityComparator();
-
-        if(sortOrder.equals(mContext.getString(R.string.sort_by_rating_value))) {
-            // Use order by rating
-            movieComparator = new MovieRatingComparator();
-        }
-
-        Collections.sort(mMovies, movieComparator);
-        Collections.reverse(mMovies);
     }
 }

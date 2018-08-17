@@ -34,7 +34,6 @@ import javax.inject.Inject;
 
 public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         SharedPreferences.OnSharedPreferenceChangeListener {
-    private RecyclerView mMoviesRecyclerView;
     private ProgressBar mMoviesListProgressBar;
     private MoviesListAdapter mMoviesListAdapter;
 
@@ -62,9 +61,11 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
 
         // Bind UI
         View v = inflater.inflate(R.layout.movies_list_fragment, container, false);
-        mMoviesRecyclerView = v.findViewById(R.id.moviesListRecyclerView);
-        mMoviesRecyclerView.setLayoutManager(
+        RecyclerView moviesRecyclerView = v.findViewById(R.id.moviesListRecyclerView);
+        moviesRecyclerView.setLayoutManager(
                 new GridLayoutManager(this.getContext(), Constants.MOVIES_LIST_NO_OF_COLUMNS));
+        mMoviesListAdapter = new MoviesListAdapter(this.getContext(), null);
+        moviesRecyclerView.setAdapter(mMoviesListAdapter);
 
         mMoviesListProgressBar = v.findViewById(R.id.moviesListProgressBar);
 
@@ -89,10 +90,9 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
     }
 
     @Override
-    public void displayMovies(@NonNull List<Movie> movies, @NonNull String sortOrder) {
-        mMoviesListAdapter = new MoviesListAdapter(this.getContext(), movies);
-        mMoviesListAdapter.orderMoviesBy(sortOrder);
-        mMoviesRecyclerView.setAdapter(mMoviesListAdapter);
+    public void displayMovies(@NonNull List<Movie> movies) {
+        mMoviesListAdapter.setMovies(movies);
+        mMoviesListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -119,8 +119,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
                     key,
                     getString(R.string.sort_by_popularity_value));
 
-            mMoviesListAdapter.orderMoviesBy(newSortOrder);
-            mMoviesListAdapter.notifyDataSetChanged();
+            fetchMovies(newSortOrder);
         }
     }
 
@@ -131,14 +130,27 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         // Load preferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
                 this.requireContext());
-        String sortOrder = sharedPreferences.getString(
+        String sortCriteria = sharedPreferences.getString(
                 getString(R.string.sort_order_key),
                 getString(R.string.sort_by_popularity_value));
 
-        // Fetch movies
-        mMoviesListPresenter.onFetchMoviesList(sortOrder);
+        fetchMovies(sortCriteria);
 
         // Register as a listener for any changes in preferences
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    /**
+     * Fetch movies based on the movies sort criteria
+     * @param sortCriteria Criteria to sort movies by
+     */
+    private void fetchMovies(String sortCriteria) {
+        if (sortCriteria.equals(getString(R.string.sort_by_rating_value))) {
+            // Fetch top rated movies
+            mMoviesListPresenter.onFetchTopRatedMovies();
+        } else {
+            // Fetch popular movies by default
+            mMoviesListPresenter.onFetchPopularMovies();
+        }
     }
 }

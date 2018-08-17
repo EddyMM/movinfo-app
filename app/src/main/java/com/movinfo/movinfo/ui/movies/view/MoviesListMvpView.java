@@ -11,7 +11,7 @@ import java.util.List;
  */
 
 public interface MoviesListMvpView {
-    void displayMovies(@NonNull List<Movie> movies, @NonNull String sortOrder);
+    void displayMovies(@NonNull List<Movie> movies);
 
     void showProgressBar();
 

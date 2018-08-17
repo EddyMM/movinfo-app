@@ -8,7 +8,7 @@ import java.util.List;
  *
  */
 
-public class PopularMoviesResponse {
+public class MoviesResponse {
     @SerializedName("page")
     private
     String page;
@@ -22,7 +22,7 @@ public class PopularMoviesResponse {
     private
     List<Movie> results;
 
-    public PopularMoviesResponse(String page, String totalResults, String totalPages,
+    public MoviesResponse(String page, String totalResults, String totalPages,
             List<Movie> results) {
         this.page = page;
         this.totalResults = totalResults;

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.movinfo.movinfo.data.DataManager;
 import com.movinfo.movinfo.data.network.models.Movie;
-import com.movinfo.movinfo.data.network.models.PopularMoviesResponse;
+import com.movinfo.movinfo.data.network.models.MoviesResponse;
 import com.movinfo.movinfo.ui.base.BasePresenter;
 import com.movinfo.movinfo.ui.movies.view.MoviesListMvpView;
 
@@ -37,30 +37,61 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
     }
 
     @Override
-    public void onFetchMoviesList(@NonNull String sortOrder) {
+    public void onFetchPopularMovies() {
         mMoviesListView.showProgressBar();
         getDataManager().getPopularMovies(
-                new Callback<PopularMoviesResponse>() {
+                new Callback<MoviesResponse>() {
                     @Override
-                    public void onResponse(@NonNull Call<PopularMoviesResponse> call,
-                            @NonNull Response<PopularMoviesResponse> response) {
+                    public void onResponse(@NonNull Call<MoviesResponse> call,
+                            @NonNull Response<MoviesResponse> response) {
                         Timber.d(response.toString());
 
-                        PopularMoviesResponse popularMoviesResponse = response.body();
+                        MoviesResponse popularMoviesResponse = response.body();
                         if (popularMoviesResponse != null) {
                             mMoviesListView.hideProgressBar();
                             List<Movie> movies = popularMoviesResponse.getResults();
-                            mMoviesListView.displayMovies(movies, sortOrder);
+                            mMoviesListView.displayMovies(movies);
                         } else {
                             Timber.e("No movies were fetched");
                         }
                     }
 
                     @Override
-                    public void onFailure(@NonNull Call<PopularMoviesResponse> call,
+                    public void onFailure(@NonNull Call<MoviesResponse> call,
                             @NonNull Throwable t) {
                         mMoviesListView.hideProgressBar();
                         Timber.e("Error fetching popular movies: " + t.getMessage());
+                        t.printStackTrace();
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void onFetchTopRatedMovies() {
+        mMoviesListView.showProgressBar();
+        getDataManager().getTopRatedMovies(
+                new Callback<MoviesResponse>() {
+                    @Override
+                    public void onResponse(@NonNull Call<MoviesResponse> call,
+                            @NonNull Response<MoviesResponse> response) {
+                        Timber.d(response.toString());
+
+                        MoviesResponse topRatedMoviesResponse = response.body();
+                        if (topRatedMoviesResponse != null) {
+                            mMoviesListView.hideProgressBar();
+                            List<Movie> movies = topRatedMoviesResponse.getResults();
+                            mMoviesListView.displayMovies(movies);
+                        } else {
+                            Timber.e("No movies were fetched");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<MoviesResponse> call,
+                            @NonNull Throwable t) {
+                        mMoviesListView.hideProgressBar();
+                        Timber.e("Error fetching top rated movies: " + t.getMessage());
                         t.printStackTrace();
                     }
                 }
