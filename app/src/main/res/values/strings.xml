@@ -6,4 +6,13 @@
     <string name="start">Start</string>
     <string name="startDescription">Start</string>
     <string name="movie_poster_description">Movie Poster</string>
+    <string name="sort_by_menu_title">Sort by</string>
+    <string name="pref_sort_by_title">Order movies by</string>
+    <string name="sort_by_popularity_label">Popularity</string>
+    <string name="sort_by_rating_label">Rating</string>
+    <string name="sort_by_popularity_value">popularity</string>
+    <string name="sort_by_rating_value">rating</string>
+    <string name="sort_order_key">sort_order</string>
+    <string name="movies_list_fragment_tag">movi_list_frag_tag</string>
+    <string name="action_settings">Settings</string>
 </resources>

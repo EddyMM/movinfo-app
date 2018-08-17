@@ -53,13 +53,13 @@ public class MoviesListAdapter extends
         return mMovies.size();
     }
 
-    public class MoviesListViewHolder extends RecyclerView.ViewHolder {
+    class MoviesListViewHolder extends RecyclerView.ViewHolder {
 
-        public MoviesListViewHolder(View itemView) {
+        MoviesListViewHolder(View itemView) {
             super(itemView);
         }
 
-        public void bind(Movie movie) {
+        void bind(Movie movie) {
             // Bind UI with data
             ImageView moviePosterImageView = itemView.findViewById(R.id.moviePosterImageView);
             String posterPath = Constants.MOVIE_DB_POSTER_URL + movie.getPosterPath()

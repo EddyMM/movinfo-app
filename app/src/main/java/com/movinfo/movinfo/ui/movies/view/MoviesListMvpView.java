@@ -14,4 +14,6 @@ public interface MoviesListMvpView {
     void showProgressBar();
 
     void hideProgressBar();
+
+    void openSettings();
 }

@@ -14,7 +14,7 @@ import com.movinfo.movinfo.di.module.ActivityModule;
  *
  */
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     private ActivityComponent mActivityComponent;
 

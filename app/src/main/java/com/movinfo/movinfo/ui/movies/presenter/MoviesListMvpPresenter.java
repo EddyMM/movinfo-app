@@ -11,4 +11,6 @@ public interface MoviesListMvpPresenter<MoviesListView extends MoviesListMvpView
     void onAttach(MoviesListView mvpView);
 
     void onFetchMoviesList();
+
+    void onSettingsClick();
 }

@@ -1,15 +1,22 @@
 package com.movinfo.movinfo.ui.movies.view;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
@@ -25,17 +32,36 @@ import javax.inject.Inject;
  *
  */
 
-public class MoviesListFragment extends Fragment implements MoviesListMvpView {
+public class MoviesListFragment extends Fragment implements MoviesListMvpView,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     private RecyclerView mMoviesRecyclerView;
     private ProgressBar mMoviesListProgressBar;
 
     @Inject
     MoviesListPresenter<MoviesListMvpView> mMoviesListPresenter;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupSharedPreferences();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sharedPreferences = PreferenceManager.
+                getDefaultSharedPreferences(requireContext());
+
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
+        // Ensure menu is displayed
+        setHasOptionsMenu(true);
+
         ((MoviesListActivity) requireActivity()).getActivityComponent().inject(this);
         mMoviesListPresenter.onAttach(this);
 
@@ -54,6 +80,21 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.movies_list_settings, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.movies_list_settings_menu_item) {
+            mMoviesListPresenter.onSettingsClick();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void displayMovies(@NonNull List<Movie> movies) {
         mMoviesRecyclerView.setAdapter(new MoviesListAdapter(this.getContext(), movies));
     }
@@ -66,5 +107,42 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView {
     @Override
     public void hideProgressBar() {
         mMoviesListProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void openSettings() {
+        Intent settingsIntent = new Intent(requireActivity(), SettingsActivity.class);
+        startActivity(settingsIntent);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.sort_order_key))) {
+            // Should list movies in a different order
+            Toast.makeText(requireContext(),
+                    "Should reload with sort order of: " + sharedPreferences.getString(
+                            key,
+                            getString(R.string.sort_by_popularity_value)),
+                    Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    /**
+     * Load preferences and register as a listener for any changes in preferences
+     */
+    private void setupSharedPreferences() {
+        // Load preferences
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(
+                this.requireContext());
+        String sortOrder = sharedPreferences.getString(
+                getString(R.string.sort_order_key),
+                getString(R.string.sort_by_popularity_value));
+
+        Toast.makeText(requireContext(), "Should load with sort order of: " + sortOrder,
+                Toast.LENGTH_LONG).show();
+
+        // Register as a listener for any changes in preferences
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 }

@@ -62,4 +62,9 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                 }
         );
     }
+
+    @Override
+    public void onSettingsClick() {
+        mMoviesListView.openSettings();
+    }
 }

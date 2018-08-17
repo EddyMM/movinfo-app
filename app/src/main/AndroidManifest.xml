@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.movinfo.movinfo">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,8 +22,18 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.movies.view.MoviesListActivity">
+        <activity
+            android:name=".ui.movies.view.MoviesListActivity"
+            android:launchMode="singleTop" />
 
+        <activity
+            android:name=".ui.movies.view.SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".ui.movies.view.MoviesListActivity"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.movies.view.MoviesListActivity" />
         </activity>
     </application>
 
