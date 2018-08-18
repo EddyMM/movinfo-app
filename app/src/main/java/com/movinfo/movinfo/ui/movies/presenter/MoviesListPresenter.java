@@ -43,13 +43,19 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
     }
 
     @Override
-    public void onSortCriteriaChange() {
+    public void refetchMovies() {
         mNextPage = 1;
         mMoviesListView.resetAdapter();
     }
 
     @Override
     public void onFetchPopularMovies() {
+        if (!mMoviesListView.isInternetConnected()) {
+            mMoviesListView.setIsLoadingMovies(false);
+            mMoviesListView.displayNoInternetConnection();
+            return;
+        }
+
         mMoviesListView.showProgressBar();
         getDataManager().getPopularMovies(
                 new Callback<MoviesResponse>() {
@@ -74,6 +80,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     public void onFailure(@NonNull Call<MoviesResponse> call,
                             @NonNull Throwable t) {
                         mMoviesListView.hideProgressBar();
+
                         mMoviesListView.setIsLoadingMovies(false);
                         Timber.e("Error fetching popular movies: " + t.getMessage());
                         t.printStackTrace();
@@ -84,6 +91,12 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
 
     @Override
     public void onFetchTopRatedMovies() {
+        if (!mMoviesListView.isInternetConnected()) {
+            mMoviesListView.setIsLoadingMovies(false);
+            mMoviesListView.displayNoInternetConnection();
+            return;
+        }
+
         mMoviesListView.showProgressBar();
         getDataManager().getTopRatedMovies(
                 new Callback<MoviesResponse>() {
@@ -107,9 +120,9 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     @Override
                     public void onFailure(@NonNull Call<MoviesResponse> call,
                             @NonNull Throwable t) {
-                        mMoviesListView.setIsLoadingMovies(false);
-
                         mMoviesListView.hideProgressBar();
+
+                        mMoviesListView.setIsLoadingMovies(false);
                         Timber.e("Error fetching top rated movies: " + t.getMessage());
                         t.printStackTrace();
                     }

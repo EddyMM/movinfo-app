@@ -17,6 +17,10 @@ public interface MoviesListMvpView {
 
     void hideProgressBar();
 
+    boolean isInternetConnected();
+
+    void displayNoInternetConnection();
+
     void setIsLoadingMovies(boolean isLoadingMovies);
 
     void resetAdapter();

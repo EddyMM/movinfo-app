@@ -1,10 +1,14 @@
 package com.movinfo.movinfo.ui.movies.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
@@ -36,6 +41,7 @@ import timber.log.Timber;
 
 public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         SharedPreferences.OnSharedPreferenceChangeListener {
+
     private ProgressBar mMoviesListProgressBar;
     private MoviesListAdapter mMoviesListAdapter;
     private GridLayoutManager mMoviesListGridLayout;
@@ -66,8 +72,8 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         mMoviesListPresenter.onAttach(this);
 
         // Bind UI
-        View v = inflater.inflate(R.layout.movies_list_fragment, container, false);
-        RecyclerView moviesRecyclerView = v.findViewById(R.id.moviesListRecyclerView);
+        View view = inflater.inflate(R.layout.movies_list_fragment, container, false);
+        RecyclerView moviesRecyclerView = view.findViewById(R.id.moviesListRecyclerView);
 
         mMoviesListGridLayout = new GridLayoutManager(this.getContext(),
                 Constants.MOVIES_LIST_NO_OF_COLUMNS);
@@ -77,11 +83,11 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         moviesRecyclerView.setAdapter(mMoviesListAdapter);
         moviesRecyclerView.addOnScrollListener(new MoviesListScrollListener());
 
-        mMoviesListProgressBar = v.findViewById(R.id.moviesListProgressBar);
+        mMoviesListProgressBar = view.findViewById(R.id.moviesListProgressBar);
 
         setupSharedPreferences();
 
-        return v;
+        return view;
     }
 
     @Override
@@ -116,6 +122,35 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
     }
 
     @Override
+    public boolean isInternetConnected() {
+        ConnectivityManager cm =
+                (ConnectivityManager) requireActivity().getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+
+
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        return activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+    }
+
+    @Override
+    public void displayNoInternetConnection() {
+        Snackbar.make(requireActivity().findViewById(android.R.id.content),
+                "No internet connection", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Retry", (v) -> {
+                    Toast.makeText(requireContext(), "Refetch movies",
+                            Toast.LENGTH_LONG).show();
+
+                    mMoviesListPresenter.refetchMovies();
+                    fetchNextPageOfMovies();
+                })
+                .show();
+    }
+
+    @Override
     public void setIsLoadingMovies(boolean isLoadingMovies) {
         isLoading = isLoadingMovies;
     }
@@ -140,7 +175,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
                     key,
                     getString(R.string.sort_by_popularity_value));
 
-            mMoviesListPresenter.onSortCriteriaChange();
+            mMoviesListPresenter.refetchMovies();
 
             fetchNextPageOfMovies();
         }
