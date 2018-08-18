@@ -75,7 +75,8 @@ public class MoviesListAdapter extends
             String posterPath = Constants.MOVIE_DB_POSTER_URL + movie.getPosterPath()
                     + "?api_key=" + BuildConfig.TheMovieDbApiToken;
             Picasso.get().load(posterPath)
-                    .error(R.drawable.ic_launcher_foreground)
+                    .placeholder(R.drawable.ic_image_black_24dp)
+                    .error(R.drawable.ic_broken_image_black_24dp)
                     .into(moviePosterImageView);
 
             // Title

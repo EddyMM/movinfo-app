@@ -186,27 +186,31 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         mMoviesListPresenter.moveToNextPage();
     }
 
+    /**
+     * Scroll Listener to implement pagination (fetch more movies as the
+     * user scrolls through them)
+     */
     private class MoviesListScrollListener extends RecyclerView.OnScrollListener {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
 
+            // Obtain some info about the number of items displayed already
             int visibleItemCount = mMoviesListGridLayout.getChildCount();
             int totalItemCount = mMoviesListGridLayout.getItemCount();
             int lastVisibleItemPosition = mMoviesListGridLayout.findLastVisibleItemPosition();
 
-            Timber.d("Total item count: %s, Visble item count: %s, Last visible item pos: %s",
+            Timber.d("Total item count: %s, Visible item count: %s, Last visible item pos: %s",
                     totalItemCount, visibleItemCount, lastVisibleItemPosition);
 
+            // Apply pagination only if movies arent already being fetched as scrolling happens
             if (!isLoading) {
                 if (lastVisibleItemPosition >= (totalItemCount * Constants.SCROLL_PAGINATION_RATIO)
                         && visibleItemCount < totalItemCount) {
-                    Timber.d("Fetch more movies now");
+                    Timber.d("Fetching more movies");
                     fetchNextPageOfMovies();
                 }
             }
         }
-
-
     }
 }
