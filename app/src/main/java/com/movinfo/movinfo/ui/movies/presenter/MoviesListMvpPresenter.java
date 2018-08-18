@@ -10,6 +10,8 @@ public interface MoviesListMvpPresenter<MoviesListView extends MoviesListMvpView
 
     void onAttach(MoviesListView mvpView);
 
+    void onSortCriteriaChange();
+
     void onFetchPopularMovies();
 
     void onFetchTopRatedMovies();

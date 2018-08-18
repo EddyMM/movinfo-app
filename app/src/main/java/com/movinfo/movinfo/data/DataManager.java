@@ -14,8 +14,8 @@ public interface DataManager {
 
     boolean wasSplashScreenSeen();
 
-    void getPopularMovies(Callback<MoviesResponse> popularMoviesCallback);
+    void getPopularMovies(Callback<MoviesResponse> popularMoviesCallback, int page);
 
-    void getTopRatedMovies(Callback<MoviesResponse> topRatedMoviesCallback);
+    void getTopRatedMovies(Callback<MoviesResponse> topRatedMoviesCallback, int page);
 
 }

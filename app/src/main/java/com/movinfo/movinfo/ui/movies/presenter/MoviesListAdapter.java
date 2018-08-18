@@ -16,6 +16,7 @@ import com.movinfo.movinfo.data.network.models.Movie;
 import com.movinfo.movinfo.utils.Constants;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,11 +25,13 @@ import java.util.List;
 
 public class MoviesListAdapter extends
         RecyclerView.Adapter<MoviesListAdapter.MoviesListViewHolder> {
-    private List<Movie> mMovies;
+    private List<Movie> mMovies = new ArrayList<>();
     private Context mContext;
 
     public MoviesListAdapter(Context context, List<Movie> movies) {
-        mMovies = movies;
+        if(movies != null) {
+            mMovies.addAll(movies);
+        }
         mContext = context;
     }
 
@@ -91,10 +94,14 @@ public class MoviesListAdapter extends
     }
 
     public void setMovies(List<Movie> movies) {
-        mMovies = movies;
+        mMovies.addAll(movies);
     }
 
     public List<Movie> getMovies() {
         return mMovies;
+    }
+
+    public void resetMoviesList() {
+        mMovies.clear();
     }
 }

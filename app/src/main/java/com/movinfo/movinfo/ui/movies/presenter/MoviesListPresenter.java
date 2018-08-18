@@ -26,14 +26,26 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
 
     private MoviesListView mMoviesListView;
 
+    private int mNextPage = 1;
+
     @Inject
     public MoviesListPresenter(DataManager dataManager) {
         super(dataManager);
     }
 
+    public void moveToNextPage() {
+        mNextPage++;
+    }
+
     @Override
     public void onAttach(MoviesListView mvpView) {
         mMoviesListView = mvpView;
+    }
+
+    @Override
+    public void onSortCriteriaChange() {
+        mNextPage = 1;
+        mMoviesListView.resetAdapter();
     }
 
     @Override
@@ -45,6 +57,8 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     public void onResponse(@NonNull Call<MoviesResponse> call,
                             @NonNull Response<MoviesResponse> response) {
                         Timber.d(response.toString());
+
+                        mMoviesListView.setIsLoadingMovies(false);
 
                         MoviesResponse popularMoviesResponse = response.body();
                         if (popularMoviesResponse != null) {
@@ -60,11 +74,12 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     public void onFailure(@NonNull Call<MoviesResponse> call,
                             @NonNull Throwable t) {
                         mMoviesListView.hideProgressBar();
+                        mMoviesListView.setIsLoadingMovies(false);
                         Timber.e("Error fetching popular movies: " + t.getMessage());
                         t.printStackTrace();
                     }
                 }
-        );
+        , mNextPage);
     }
 
     @Override
@@ -76,6 +91,8 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     public void onResponse(@NonNull Call<MoviesResponse> call,
                             @NonNull Response<MoviesResponse> response) {
                         Timber.d(response.toString());
+
+                        mMoviesListView.setIsLoadingMovies(false);
 
                         MoviesResponse topRatedMoviesResponse = response.body();
                         if (topRatedMoviesResponse != null) {
@@ -90,12 +107,14 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     @Override
                     public void onFailure(@NonNull Call<MoviesResponse> call,
                             @NonNull Throwable t) {
+                        mMoviesListView.setIsLoadingMovies(false);
+
                         mMoviesListView.hideProgressBar();
                         Timber.e("Error fetching top rated movies: " + t.getMessage());
                         t.printStackTrace();
                     }
                 }
-        );
+        , mNextPage);
     }
 
     @Override

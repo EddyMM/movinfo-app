@@ -14,39 +14,37 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class MovieDbApi {
-    private static MovieDbService sMovieDbApi = null;
+    private MovieDbApi() {}
 
-    private MovieDbApi() {
-    }
+    public static MovieDbService getInstance(int page) {
+        Retrofit retrofit;
 
-    public static MovieDbService getInstance() {
-        if (sMovieDbApi == null) {
-            // Build a client with an interceptor to add the API key
-            OkHttpClient httpClient = new OkHttpClient.Builder()
-                    .addInterceptor(chain -> {
-                        Request initialRequest = chain.request();
-                        HttpUrl initialHttpUrl = initialRequest.url();
+        // Build a client with an interceptor to add the API key
+        OkHttpClient httpClient = new OkHttpClient.Builder()
+                .addInterceptor(chain -> {
+                    Request initialRequest = chain.request();
+                    HttpUrl initialHttpUrl = initialRequest.url();
 
-                        HttpUrl modifiedHttpUrl = initialHttpUrl.newBuilder()
-                                .addQueryParameter(Constants.API_KEY_REQUEST_KEY,
-                                        BuildConfig.TheMovieDbApiToken)
-                                .build();
-                        Request modifiedRequest = initialRequest.newBuilder()
-                                .url(modifiedHttpUrl)
-                                .build();
+                    HttpUrl modifiedHttpUrl = initialHttpUrl.newBuilder()
+                            .addQueryParameter(Constants.API_KEY_REQUEST_KEY,
+                                    BuildConfig.TheMovieDbApiToken)
+                            .addQueryParameter(Constants.PAGE_KEY, String.valueOf(page))
+                            .build();
+                    Request modifiedRequest = initialRequest.newBuilder()
+                            .url(modifiedHttpUrl)
+                            .build();
 
-                        return chain.proceed(modifiedRequest);
-                    })
-                    .build();
+                    return chain.proceed(modifiedRequest);
+                })
+                .build();
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.MOVIE_DB_API_BASE_URL)
-                    .client(httpClient)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.MOVIE_DB_API_BASE_URL)
+                .client(httpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
 
-            sMovieDbApi = retrofit.create(MovieDbService.class);
-        }
-        return sMovieDbApi;
+
+        return retrofit.create(MovieDbService.class);
     }
 }

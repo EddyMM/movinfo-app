@@ -17,5 +17,9 @@ public interface MoviesListMvpView {
 
     void hideProgressBar();
 
+    void setIsLoadingMovies(boolean isLoadingMovies);
+
+    void resetAdapter();
+
     void openSettings();
 }

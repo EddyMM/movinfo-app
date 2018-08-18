@@ -34,16 +34,16 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void getPopularMovies(Callback<MoviesResponse> popularMoviesCallback) {
-        MovieDbService movieDbService = MovieDbApi.getInstance();
+    public void getPopularMovies(Callback<MoviesResponse> popularMoviesCallback, int page) {
+        MovieDbService movieDbService = MovieDbApi.getInstance(page);
 
         Call<MoviesResponse> popularMoviesCall = movieDbService.getPopularMovies();
         popularMoviesCall.enqueue(popularMoviesCallback);
     }
 
     @Override
-    public void getTopRatedMovies(Callback<MoviesResponse> topRatedMoviesCallback) {
-        MovieDbService movieDbService = MovieDbApi.getInstance();
+    public void getTopRatedMovies(Callback<MoviesResponse> topRatedMoviesCallback, int page) {
+        MovieDbService movieDbService = MovieDbApi.getInstance(page);
 
         Call<MoviesResponse> topRatedMoviesCall = movieDbService.getTopRatedMovies();
         topRatedMoviesCall.enqueue(topRatedMoviesCallback);
