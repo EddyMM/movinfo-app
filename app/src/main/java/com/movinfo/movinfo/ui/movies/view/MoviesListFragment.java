@@ -45,6 +45,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
     private ProgressBar mMoviesListProgressBar;
     private MoviesListAdapter mMoviesListAdapter;
     private GridLayoutManager mMoviesListGridLayout;
+    private Snackbar mInternetConnectionSnackbar;
 
     private boolean isLoading;
     private String mSortCriteria;
@@ -137,17 +138,26 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
     }
 
     @Override
-    public void displayNoInternetConnection() {
-        Snackbar.make(requireActivity().findViewById(android.R.id.content),
-                "No internet connection", Snackbar.LENGTH_INDEFINITE)
-                .setAction("Retry", (v) -> {
-                    Toast.makeText(requireContext(), "Refetch movies",
-                            Toast.LENGTH_LONG).show();
+    public void showNoInternetConnectionMessage() {
+        if (mInternetConnectionSnackbar == null || (!mInternetConnectionSnackbar.isShown())) {
+            mInternetConnectionSnackbar = Snackbar.make(
+                    requireActivity().findViewById(android.R.id.content),
+                    "No internet connection", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Retry", (v) -> {
+                        Toast.makeText(requireContext(), "Refetch movies",
+                                Toast.LENGTH_LONG).show();
 
-                    mMoviesListPresenter.refetchMovies();
-                    fetchNextPageOfMovies();
-                })
-                .show();
+                        fetchNextPageOfMovies();
+                    });
+            mInternetConnectionSnackbar.show();
+        }
+    }
+
+    @Override
+    public void removeNoInternetConnectionMessage() {
+        if (mInternetConnectionSnackbar != null && mInternetConnectionSnackbar.isShown()) {
+            mInternetConnectionSnackbar.dismiss();
+        }
     }
 
     @Override
@@ -203,6 +213,15 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
      * Fetch movies based on the movies sort criteria
      */
     private void fetchMovies() {
+        // Ensure is connected to the internet
+        if (!isInternetConnected()) {
+            setIsLoadingMovies(false);
+            showNoInternetConnectionMessage();
+            return;
+        }
+
+        removeNoInternetConnectionMessage();
+
         if (mSortCriteria.equals(getString(R.string.sort_by_rating_value))) {
             // Fetch top rated movies
             mMoviesListPresenter.onFetchTopRatedMovies();
@@ -218,7 +237,6 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
     private void fetchNextPageOfMovies() {
         isLoading = true;
         fetchMovies();
-        mMoviesListPresenter.moveToNextPage();
     }
 
     /**

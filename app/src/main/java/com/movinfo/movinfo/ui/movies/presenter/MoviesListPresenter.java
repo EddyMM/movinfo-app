@@ -33,7 +33,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
         super(dataManager);
     }
 
-    public void moveToNextPage() {
+    private void moveToNextPage() {
         mNextPage++;
     }
 
@@ -50,13 +50,8 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
 
     @Override
     public void onFetchPopularMovies() {
-        if (!mMoviesListView.isInternetConnected()) {
-            mMoviesListView.setIsLoadingMovies(false);
-            mMoviesListView.displayNoInternetConnection();
-            return;
-        }
-
         mMoviesListView.showProgressBar();
+
         getDataManager().getPopularMovies(
                 new Callback<MoviesResponse>() {
                     @Override
@@ -87,17 +82,14 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     }
                 }
         , mNextPage);
+
+        moveToNextPage();
     }
 
     @Override
     public void onFetchTopRatedMovies() {
-        if (!mMoviesListView.isInternetConnected()) {
-            mMoviesListView.setIsLoadingMovies(false);
-            mMoviesListView.displayNoInternetConnection();
-            return;
-        }
-
         mMoviesListView.showProgressBar();
+
         getDataManager().getTopRatedMovies(
                 new Callback<MoviesResponse>() {
                     @Override
@@ -128,6 +120,8 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                     }
                 }
         , mNextPage);
+
+        moveToNextPage();
     }
 
     @Override

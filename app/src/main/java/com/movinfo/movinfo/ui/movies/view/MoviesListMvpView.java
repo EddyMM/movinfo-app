@@ -19,7 +19,9 @@ public interface MoviesListMvpView {
 
     boolean isInternetConnected();
 
-    void displayNoInternetConnection();
+    void showNoInternetConnectionMessage();
+
+    void removeNoInternetConnectionMessage();
 
     void setIsLoadingMovies(boolean isLoadingMovies);
 

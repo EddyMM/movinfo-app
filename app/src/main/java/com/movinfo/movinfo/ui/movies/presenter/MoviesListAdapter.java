@@ -104,5 +104,6 @@ public class MoviesListAdapter extends
 
     public void resetMoviesList() {
         mMovies.clear();
+        notifyDataSetChanged();
     }
 }
