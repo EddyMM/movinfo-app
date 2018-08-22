@@ -25,12 +25,23 @@
 
         <activity
             android:name=".ui.movies.view.MoviesListActivity"
+            android:theme="@style/AppTheme.ActionBar"
             android:launchMode="singleTop" />
 
         <activity
             android:name=".ui.movies.view.settings.SettingsActivity"
             android:label="@string/action_settings"
+            android:theme="@style/AppTheme.ActionBar"
             android:parentActivityName=".ui.movies.view.MoviesListActivity"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.movies.view.MoviesListActivity" />
+        </activity>
+
+        <activity android:name=".ui.movies.MoviesDetailActivity"
+            android:parentActivityName=".ui.movies.view.MoviesListActivity"
+            android:theme="@style/AppTheme.ActionBar.Transparent"
             tools:targetApi="jelly_bean">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

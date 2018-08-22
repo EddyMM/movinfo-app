@@ -1,6 +1,7 @@
 package com.movinfo.movinfo.ui.movies.presenter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.movinfo.movinfo.BuildConfig;
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
+import com.movinfo.movinfo.ui.movies.MoviesDetailActivity;
 import com.movinfo.movinfo.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -29,7 +31,7 @@ public class MoviesListAdapter extends
     private Context mContext;
 
     public MoviesListAdapter(Context context, List<Movie> movies) {
-        if(movies != null) {
+        if (movies != null) {
             mMovies.addAll(movies);
         }
         mContext = context;
@@ -61,17 +63,33 @@ public class MoviesListAdapter extends
         return noOfMovies;
     }
 
-    class MoviesListViewHolder extends RecyclerView.ViewHolder {
+    public List<Movie> getMovies() {
+        return mMovies;
+    }
+
+    public void setMovies(List<Movie> movies) {
+        mMovies.addAll(movies);
+    }
+
+    public void resetMoviesList() {
+        mMovies.clear();
+        notifyDataSetChanged();
+    }
+
+    class MoviesListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         MoviesListViewHolder(View itemView) {
             super(itemView);
+
+            itemView.setOnClickListener(this);
         }
 
         void bind(Movie movie) {
             // Bind UI with data
 
             // Poster
-            ImageView moviePosterImageView = itemView.findViewById(R.id.moviePosterImageView);
+            ImageView moviePosterImageView = itemView.findViewById(
+                    R.id.movieDetailsPosterImageView);
             String posterPath = Constants.MOVIE_DB_POSTER_URL + movie.getPosterPath()
                     + "?api_key=" + BuildConfig.TheMovieDbApiToken;
             Picasso.get().load(posterPath)
@@ -85,25 +103,25 @@ public class MoviesListAdapter extends
 
             // Rating
             RatingBar movieRatingBar = itemView.findViewById(R.id.movieRatingBar);
-            float rating  = 5 * (movie.getVoteAverage() / 10);
+            float rating = 5 * (movie.getVoteAverage() / 10);
             movieRatingBar.setRating(rating);
 
             // Vote counts
             TextView voteCountsTextView = itemView.findViewById(R.id.movieVoteCountsTextView);
             voteCountsTextView.setText(String.format("%s", movie.getVoteCount()));
         }
-    }
 
-    public void setMovies(List<Movie> movies) {
-        mMovies.addAll(movies);
-    }
+        private void openMovieDetails(Movie movie) {
+            Intent intent = new Intent(mContext, MoviesDetailActivity.class);
+            intent.putExtra(MoviesDetailActivity.MOVIE_INTENT_EXTRA, movie);
 
-    public List<Movie> getMovies() {
-        return mMovies;
-    }
+            mContext.startActivity(intent);
+        }
 
-    public void resetMoviesList() {
-        mMovies.clear();
-        notifyDataSetChanged();
+        @Override
+        public void onClick(View view) {
+            int moviePositionClicked = getAdapterPosition();
+            openMovieDetails(mMovies.get(moviePositionClicked));
+        }
     }
 }

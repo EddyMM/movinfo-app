@@ -2,6 +2,7 @@ package com.movinfo.movinfo.data.network.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -9,7 +10,7 @@ import java.util.Date;
  *
  */
 
-public class Movie {
+public class Movie implements Serializable {
     @SerializedName("poster_url")
     private String posterUrl;
     @SerializedName("vote_count")

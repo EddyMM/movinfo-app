@@ -42,16 +42,14 @@ import timber.log.Timber;
 public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
+    @Inject
+    MoviesListPresenter<MoviesListMvpView> mMoviesListPresenter;
     private ProgressBar mMoviesListProgressBar;
     private MoviesListAdapter mMoviesListAdapter;
     private GridLayoutManager mMoviesListGridLayout;
     private Snackbar mInternetConnectionSnackbar;
-
     private boolean isLoading;
     private String mSortCriteria;
-
-    @Inject
-    MoviesListPresenter<MoviesListMvpView> mMoviesListPresenter;
 
     @Override
     public void onDestroy() {
