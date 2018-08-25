@@ -91,7 +91,7 @@ public class MoviesDetailFragment extends Fragment {
                 movieTitleTextView.setText(movie.getTitle());
             }
         } else {
-            Log.d(TAG, "Movie is null");
+            Log.w(TAG, "Movie in Details screen is null");
         }
 
         return v;

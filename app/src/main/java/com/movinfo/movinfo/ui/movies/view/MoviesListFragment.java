@@ -48,6 +48,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
     private GridLayoutManager mMoviesListGridLayout;
     private Snackbar mInternetConnectionSnackbar;
     private boolean isLoading;
+    private boolean retryAttempted;
     private String mSortCriteria;
 
     @Override
@@ -136,11 +137,25 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
 
     @Override
     public void showNoInternetConnectionMessage() {
-        if (mInternetConnectionSnackbar == null || (!mInternetConnectionSnackbar.isShown())) {
-            mInternetConnectionSnackbar = Snackbar.make(
-                    requireActivity().findViewById(android.R.id.content),
-                    "No internet connection", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Retry", (v) -> fetchNextPageOfMovies());
+         if (mInternetConnectionSnackbar == null || retryAttempted) {
+             // Reset the retry attempt to ensure recursive retries are recognized
+             retryAttempted = false;
+
+             // requireActivity().findViewById(android.R.id.content)
+             mInternetConnectionSnackbar = Snackbar.make(
+                     requireActivity().findViewById(R.id.single_fragment),
+                     "No internet connection", Snackbar.LENGTH_INDEFINITE)
+                     .setAction("Retry", (v) -> {
+                         if (!isInternetConnected()) {
+                             retryAttempted = true;
+                             showNoInternetConnectionMessage();
+                             return;
+                         }
+                         fetchNextPageOfMovies();
+                     });
+         }
+
+        if (!mInternetConnectionSnackbar.isShown()) {
             mInternetConnectionSnackbar.show();
         }
     }
