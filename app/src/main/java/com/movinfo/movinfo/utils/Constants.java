@@ -11,7 +11,11 @@ public class Constants {
 
     public static final String MOVIE_DB_API_BASE_URL = "https://api.themoviedb.org/3/";
 
-    public static final String MOVIE_DB_POSTER_URL = "http://image.tmdb.org/t/p/w342/";
+    public static final String MOVIE_DB_POSTER_URL = "http://image.tmdb.org/t/p/";
+
+    public static final String MOVIES_LIST_POSTER_RESOLUTION = "w342/";
+
+    public static final String MOVIES_DETAILS_POSTER_RESOLUTION = "w500/";
 
     public static final String API_KEY_REQUEST_KEY = "api_key";
 

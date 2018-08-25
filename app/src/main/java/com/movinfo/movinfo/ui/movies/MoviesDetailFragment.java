@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.movinfo.movinfo.BuildConfig;
@@ -53,20 +54,44 @@ public class MoviesDetailFragment extends Fragment {
 
         TextView movieTitleTextView = v.findViewById(R.id.movieDetailsTitleTextView);
         TextView movieSynopsisTextView = v.findViewById(R.id.movieSynopsisTextView);
+        TextView releaseDateTextView = v.findViewById(R.id.releaseDateTextView);
+        TextView voteAverageTextView = v.findViewById(R.id.voteAverageTextView);
+
         ImageView moviePosterImageView = v.findViewById(R.id.movieDetailsPosterImageView);
+        RatingBar voteAverageBar = v.findViewById(R.id.movieDetailsRatingBar);
 
         if (movie != null) {
             Log.d(TAG, "Showing movie: " + movie);
-            String posterPath = Constants.MOVIE_DB_POSTER_URL + movie.getPosterPath()
-                    + "?api_key=" + BuildConfig.TheMovieDbApiToken;
-            Picasso.get().load(posterPath).into(moviePosterImageView);
+            // Display poster
+            String posterPath =
+                    Constants.MOVIE_DB_POSTER_URL + Constants.MOVIES_DETAILS_POSTER_RESOLUTION
+                            + movie.getPosterPath()
+                            + "?api_key=" + BuildConfig.TheMovieDbApiToken;
+            Picasso.get().load(posterPath)
+                    .placeholder(R.drawable.ic_image_black_24dp)
+                    .error(R.drawable.ic_broken_image_black_24dp)
+                    .into(moviePosterImageView);
+
+            // Title
             movieSynopsisTextView.setText(movie.getOverview());
-            if(actionBar != null) {
+
+            // Rating
+            float rating = 5 * (movie.getVoteAverage() / 10);
+            voteAverageBar.setRating(rating);
+
+            // Vote average
+            voteAverageTextView.setText(String.valueOf(movie.getVoteAverage()));
+
+
+            // Release date
+            releaseDateTextView.setText(movie.getFormattedDate());
+
+            if (actionBar != null) {
                 actionBar.setTitle(movie.getTitle());
                 movieTitleTextView.setText(movie.getTitle());
             }
         } else {
-            Log.d(TAG, "Details movie is null");
+            Log.d(TAG, "Movie is null");
         }
 
         return v;

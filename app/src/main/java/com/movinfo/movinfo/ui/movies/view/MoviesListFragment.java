@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
@@ -141,12 +140,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
             mInternetConnectionSnackbar = Snackbar.make(
                     requireActivity().findViewById(android.R.id.content),
                     "No internet connection", Snackbar.LENGTH_INDEFINITE)
-                    .setAction("Retry", (v) -> {
-                        Toast.makeText(requireContext(), "Refetch movies",
-                                Toast.LENGTH_LONG).show();
-
-                        fetchNextPageOfMovies();
-                    });
+                    .setAction("Retry", (v) -> fetchNextPageOfMovies());
             mInternetConnectionSnackbar.show();
         }
     }

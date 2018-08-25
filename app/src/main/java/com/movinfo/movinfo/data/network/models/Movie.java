@@ -3,6 +3,7 @@ package com.movinfo.movinfo.data.network.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -122,5 +123,11 @@ public class Movie implements Serializable {
 
     public Date getReleaseDate() {
         return releaseDate;
+    }
+
+    public String getFormattedDate() {
+        SimpleDateFormat sf = (SimpleDateFormat) SimpleDateFormat.getDateInstance();
+        sf.applyLocalizedPattern("E, MMM dd, yyyy");
+        return sf.format(releaseDate);
     }
 }

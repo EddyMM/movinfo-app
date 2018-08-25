@@ -90,8 +90,10 @@ public class MoviesListAdapter extends
             // Poster
             ImageView moviePosterImageView = itemView.findViewById(
                     R.id.movieDetailsPosterImageView);
-            String posterPath = Constants.MOVIE_DB_POSTER_URL + movie.getPosterPath()
-                    + "?api_key=" + BuildConfig.TheMovieDbApiToken;
+            String posterPath =
+                    Constants.MOVIE_DB_POSTER_URL + Constants.MOVIES_LIST_POSTER_RESOLUTION
+                            + movie.getPosterPath()
+                            + "?api_key=" + BuildConfig.TheMovieDbApiToken;
             Picasso.get().load(posterPath)
                     .placeholder(R.drawable.ic_image_black_24dp)
                     .error(R.drawable.ic_broken_image_black_24dp)
@@ -102,13 +104,13 @@ public class MoviesListAdapter extends
             movieTitleTextView.setText(movie.getTitle());
 
             // Rating
-            RatingBar movieRatingBar = itemView.findViewById(R.id.movieRatingBar);
+            RatingBar movieVoteAverageBar = itemView.findViewById(R.id.movieRatingBar);
             float rating = 5 * (movie.getVoteAverage() / 10);
-            movieRatingBar.setRating(rating);
+            movieVoteAverageBar.setRating(rating);
 
-            // Vote counts
-            TextView voteCountsTextView = itemView.findViewById(R.id.movieVoteCountsTextView);
-            voteCountsTextView.setText(String.format("%s", movie.getVoteCount()));
+            // Vote Average
+            TextView voteAverageTextView = itemView.findViewById(R.id.movieVoteAverageTextView);
+            voteAverageTextView.setText(String.format("%s", movie.getVoteAverage()));
         }
 
         private void openMovieDetails(Movie movie) {
