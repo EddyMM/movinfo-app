@@ -1,6 +1,7 @@
 # Movinfo
 
 An android application to discover the currently popular movies.
+APK can be found [here](https://github.com/EddyMM/movinfo-app/releases)
 
 <img src="githubAssets/imgs/splash_screen.png" alt="Movie list screen" width=250 height=450 />  <img src="githubAssets/imgs/movie_list_screen.png" alt="Movie list screen" width=250 height=450 />  
 <img src="githubAssets/imgs/movie_details_screen.png" alt="Movie list screen" width=250 height=450 />  <img src="githubAssets/imgs/settings_screen.png" alt="Movie list screen" width=250 height=450 />
