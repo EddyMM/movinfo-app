@@ -30,10 +30,7 @@ public class MoviesListAdapter extends
     private List<Movie> mMovies = new ArrayList<>();
     private Context mContext;
 
-    public MoviesListAdapter(Context context, List<Movie> movies) {
-        if (movies != null) {
-            mMovies.addAll(movies);
-        }
+    public MoviesListAdapter(Context context) {
         mContext = context;
     }
 

@@ -78,7 +78,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
                 Constants.MOVIES_LIST_NO_OF_COLUMNS);
 
         moviesRecyclerView.setLayoutManager(mMoviesListGridLayout);
-        mMoviesListAdapter = new MoviesListAdapter(this.getContext(), null);
+        mMoviesListAdapter = new MoviesListAdapter(this.getContext());
         moviesRecyclerView.setAdapter(mMoviesListAdapter);
         moviesRecyclerView.addOnScrollListener(new MoviesListScrollListener());
 
@@ -227,7 +227,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
      * Gets the next page of movies based on the movies sort criteria
      */
     private void fetchNextPageOfMovies() {
-        isLoading = true;
+        setIsLoadingMovies(true);
 
         // Ensure device is connected to the internet
         if (!isInternetConnected()) {

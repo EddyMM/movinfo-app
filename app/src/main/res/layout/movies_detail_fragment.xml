@@ -55,7 +55,8 @@
             android:layout_marginTop="24dp"
             app:layout_constraintStart_toEndOf="@+id/movieDetailsRatingBar"
             app:layout_constraintTop_toBottomOf="@+id/movieDetailsTitleTextView"
-            tools:text="vote average" />
+            tools:text="vote average"
+            android:layout_marginLeft="8dp" />
 
         <TextView
             android:id="@+id/releaseDateLabelTextView"
@@ -116,7 +117,8 @@
             android:isIndicator="true"
             android:max="5"
             app:layout_constraintStart_toEndOf="@+id/voteAverageLabelTextView"
-            app:layout_constraintTop_toBottomOf="@+id/movieDetailsTitleTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/movieDetailsTitleTextView"
+            android:layout_marginLeft="8dp" />
 
 
     </android.support.constraint.ConstraintLayout>
