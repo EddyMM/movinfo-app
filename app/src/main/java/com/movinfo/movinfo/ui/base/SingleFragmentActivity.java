@@ -3,7 +3,6 @@ package com.movinfo.movinfo.ui.base;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 
 import com.movinfo.movinfo.R;
 
@@ -11,7 +10,7 @@ import com.movinfo.movinfo.R;
  * Base activity that hosts a single fragment
  */
 
-public abstract class SingleFragmentActivity extends AppCompatActivity {
+public abstract class SingleFragmentActivity extends BaseActivity {
     protected abstract Fragment createFragment();
 
     @Override

@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.movinfo.movinfo">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:name=".MovInfoApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/movinfo_app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/movinfo_app_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.splash.SplashActivity">
+
+        <activity
+            android:name=".ui.splash.view.SplashActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,8 +25,30 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.movies.MoviesListActivity">
+        <activity
+            android:name=".ui.movies.list.view.MoviesListActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.ActionBar" />
 
+        <activity
+            android:name=".ui.movies.list.settings.SettingsActivity"
+            android:label="@string/action_settings"
+            android:parentActivityName=".ui.movies.list.view.MoviesListActivity"
+            android:theme="@style/AppTheme.ActionBar"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.movies.list.view.MoviesListActivity" />
+        </activity>
+
+        <activity
+            android:name=".ui.movies.detail.MoviesDetailActivity"
+            android:parentActivityName=".ui.movies.list.view.MoviesListActivity"
+            android:theme="@style/AppTheme.ActionBar.Transparent"
+            tools:targetApi="jelly_bean">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.movies.list.view.MoviesListActivity" />
         </activity>
     </application>
 
