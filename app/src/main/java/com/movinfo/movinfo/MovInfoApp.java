@@ -2,12 +2,9 @@ package com.movinfo.movinfo;
 
 import android.app.Application;
 
-import com.movinfo.movinfo.data.DataManager;
 import com.movinfo.movinfo.di.component.ApplicationComponent;
 import com.movinfo.movinfo.di.component.DaggerApplicationComponent;
 import com.movinfo.movinfo.di.module.ApplicationModule;
-
-import javax.inject.Inject;
 
 import timber.log.Timber;
 
@@ -17,14 +14,13 @@ import timber.log.Timber;
  */
 
 public class MovInfoApp extends Application {
-    @Inject
-    DataManager mDataManager;
-
     private ApplicationComponent mApplicationComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Initialize the timber for logging
         initTimber();
 
         mApplicationComponent = DaggerApplicationComponent.builder()
