@@ -32,3 +32,7 @@ This project is mantained by:
 3. Commit your changes (git commit -m 'Add some feature')
 4. Push your branch (git push origin my-new-feature)
 5. Create a new Pull Request
+
+## Acknowledgements
+
+Movie information provided by [TheMovieDb]((https://www.themoviedb.org/)) API
