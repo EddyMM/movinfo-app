@@ -11,7 +11,7 @@ Clone this repository and import into **Android Studio**
 git clone https://github.com/EddyMM/movinfo-app.git
 ```
 
-###Adding an API key
+### Adding an API key
 
 - Create an account with [The Movie DB](https://www.themoviedb.org/)
 - Get an API key from your account settings
