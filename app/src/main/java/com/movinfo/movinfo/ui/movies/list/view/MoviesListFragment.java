@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies.view;
+package com.movinfo.movinfo.ui.movies.list.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,9 +23,9 @@ import android.widget.ProgressBar;
 
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
-import com.movinfo.movinfo.ui.movies.presenter.MoviesListAdapter;
-import com.movinfo.movinfo.ui.movies.presenter.MoviesListPresenter;
-import com.movinfo.movinfo.ui.movies.view.settings.SettingsActivity;
+import com.movinfo.movinfo.ui.movies.list.presenter.MoviesListAdapter;
+import com.movinfo.movinfo.ui.movies.list.presenter.MoviesListPresenter;
+import com.movinfo.movinfo.ui.movies.list.settings.SettingsActivity;
 import com.movinfo.movinfo.utils.Constants;
 
 import java.util.List;
@@ -84,6 +84,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
 
         mMoviesListProgressBar = view.findViewById(R.id.moviesListProgressBar);
 
+        // Read preferences and load UI accordingly
         setupSharedPreferences();
 
         return view;
@@ -135,31 +136,36 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
                 activeNetwork.isConnectedOrConnecting();
     }
 
+    /**
+     * Displays a SnackBar prompting user to connect to the internet in order to load movies
+     */
     @Override
     public void showNoInternetConnectionMessage() {
-         if (mInternetConnectionSnackbar == null || retryAttempted) {
-             // Reset the retry attempt to ensure recursive retries are recognized
-             retryAttempted = false;
+        if (mInternetConnectionSnackbar == null || retryAttempted) {
+            // Reset the retry attempt to ensure recursive retries are recognized
+            retryAttempted = false;
 
-             // requireActivity().findViewById(android.R.id.content)
-             mInternetConnectionSnackbar = Snackbar.make(
-                     requireActivity().findViewById(R.id.single_fragment),
-                     "No internet connection", Snackbar.LENGTH_INDEFINITE)
-                     .setAction("Retry", (v) -> {
-                         if (!isInternetConnected()) {
-                             retryAttempted = true;
-                             showNoInternetConnectionMessage();
-                             return;
-                         }
-                         fetchNextPageOfMovies();
-                     });
-         }
+            mInternetConnectionSnackbar = Snackbar.make(
+                    requireActivity().findViewById(R.id.single_fragment),
+                    getString(R.string.no_internet_connection_message), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(R.string.retry), (v) -> {
+                        if (!isInternetConnected()) {
+                            retryAttempted = true;
+                            showNoInternetConnectionMessage();
+                            return;
+                        }
+                        fetchNextPageOfMovies();
+                    });
+        }
 
         if (!mInternetConnectionSnackbar.isShown()) {
             mInternetConnectionSnackbar.show();
         }
     }
 
+    /**
+     * Removes the SnackBar prompting user to connect to the internet
+     */
     @Override
     public void removeNoInternetConnectionMessage() {
         if (mInternetConnectionSnackbar != null && mInternetConnectionSnackbar.isShown()) {
@@ -210,6 +216,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
                 getString(R.string.sort_by_popularity_value));
 
 
+        // Go ahead and fetch movies after reading preferred sort criteria
         fetchNextPageOfMovies();
 
         // Register as a listener for any changes in preferences
@@ -217,16 +224,19 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
     }
 
     /**
-     * Fetch movies based on the movies sort criteria
+     * Gets the next page of movies based on the movies sort criteria
      */
-    private void fetchMovies() {
-        // Ensure is connected to the internet
+    private void fetchNextPageOfMovies() {
+        isLoading = true;
+
+        // Ensure device is connected to the internet
         if (!isInternetConnected()) {
             setIsLoadingMovies(false);
             showNoInternetConnectionMessage();
             return;
         }
 
+        // Dismiss the no internet connection if it is shown
         removeNoInternetConnectionMessage();
 
         if (mSortCriteria.equals(getString(R.string.sort_by_rating_value))) {
@@ -236,14 +246,6 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
             // Fetch popular movies by default
             mMoviesListPresenter.onFetchPopularMovies();
         }
-    }
-
-    /**
-     * Gets the next page of movies
-     */
-    private void fetchNextPageOfMovies() {
-        isLoading = true;
-        fetchMovies();
     }
 
     /**
@@ -263,7 +265,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
             Timber.d("Total item count: %s, Visible item count: %s, Last visible item pos: %s",
                     totalItemCount, visibleItemCount, lastVisibleItemPosition);
 
-            // Apply pagination only if movies arent already being fetched as scrolling happens
+            // Apply pagination only if movies are not already being fetched as scrolling happens
             if (!isLoading) {
                 if (lastVisibleItemPosition >= (totalItemCount * Constants.SCROLL_PAGINATION_RATIO)
                         && visibleItemCount < totalItemCount) {

@@ -2,7 +2,7 @@ package com.movinfo.movinfo.di.component;
 
 import com.movinfo.movinfo.di.PerActivity;
 import com.movinfo.movinfo.di.module.ActivityModule;
-import com.movinfo.movinfo.ui.movies.view.MoviesListFragment;
+import com.movinfo.movinfo.ui.movies.list.view.MoviesListFragment;
 import com.movinfo.movinfo.ui.splash.view.SplashFragment;
 
 import dagger.Component;

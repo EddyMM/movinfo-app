@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies.presenter;
+package com.movinfo.movinfo.ui.movies.list.presenter;
 
 import android.support.annotation.NonNull;
 
@@ -6,7 +6,7 @@ import com.movinfo.movinfo.data.DataManager;
 import com.movinfo.movinfo.data.network.models.Movie;
 import com.movinfo.movinfo.data.network.models.MoviesResponse;
 import com.movinfo.movinfo.ui.base.BasePresenter;
-import com.movinfo.movinfo.ui.movies.view.MoviesListMvpView;
+import com.movinfo.movinfo.ui.movies.list.view.MoviesListMvpView;
 
 import java.util.List;
 
@@ -81,7 +81,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                         t.printStackTrace();
                     }
                 }
-        , mNextPage);
+                , mNextPage);
 
         moveToNextPage();
     }
@@ -119,7 +119,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
                         t.printStackTrace();
                     }
                 }
-        , mNextPage);
+                , mNextPage);
 
         moveToNextPage();
     }

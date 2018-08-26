@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies;
+package com.movinfo.movinfo.ui.movies.detail;
 
 import android.support.v4.app.Fragment;
 import android.view.MotionEvent;
@@ -17,7 +17,8 @@ public class MoviesDetailActivity extends SingleFragmentActivity {
         return new MoviesDetailFragment();
     }
 
-    @Override public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
         try {
             return super.dispatchTouchEvent(motionEvent);
         } catch (NullPointerException e) {

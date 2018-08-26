@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies.view;
+package com.movinfo.movinfo.ui.movies.list.view;
 
 import android.support.annotation.NonNull;
 

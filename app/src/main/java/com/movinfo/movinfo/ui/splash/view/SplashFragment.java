@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.movinfo.movinfo.R;
-import com.movinfo.movinfo.ui.movies.view.MoviesListActivity;
+import com.movinfo.movinfo.ui.movies.list.view.MoviesListActivity;
 import com.movinfo.movinfo.ui.splash.presenter.SplashMvpPresenter;
 
 import javax.inject.Inject;

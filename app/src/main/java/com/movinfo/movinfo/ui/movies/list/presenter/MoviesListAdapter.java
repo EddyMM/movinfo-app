@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies.presenter;
+package com.movinfo.movinfo.ui.movies.list.presenter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.movinfo.movinfo.BuildConfig;
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
-import com.movinfo.movinfo.ui.movies.MoviesDetailActivity;
+import com.movinfo.movinfo.ui.movies.detail.MoviesDetailActivity;
 import com.movinfo.movinfo.utils.Constants;
 import com.squareup.picasso.Picasso;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * RecyclerView adapter to manage the movies list
  */
 
 public class MoviesListAdapter extends

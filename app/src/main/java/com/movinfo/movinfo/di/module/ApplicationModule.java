@@ -12,7 +12,6 @@ import com.movinfo.movinfo.data.DataManager;
 import com.movinfo.movinfo.data.preferences.AppPreferencesHelper;
 import com.movinfo.movinfo.data.preferences.PreferencesHelper;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Module;

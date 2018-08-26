@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies.view.settings;
+package com.movinfo.movinfo.ui.movies.list.settings;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,7 +31,7 @@ public class SettingsActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if(itemId == android.R.id.home) {
+        if (itemId == android.R.id.home) {
             // Return to the movies list
             NavUtils.navigateUpFromSameTask(this);
         }

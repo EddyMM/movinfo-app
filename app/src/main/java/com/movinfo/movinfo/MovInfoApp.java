@@ -23,6 +23,7 @@ public class MovInfoApp extends Application {
         // Initialize the timber for logging
         initTimber();
 
+        // Interface for dependency injection
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();

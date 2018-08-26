@@ -1,6 +1,6 @@
-package com.movinfo.movinfo.ui.movies.presenter;
+package com.movinfo.movinfo.ui.movies.list.presenter;
 
-import com.movinfo.movinfo.ui.movies.view.MoviesListMvpView;
+import com.movinfo.movinfo.ui.movies.list.view.MoviesListMvpView;
 
 /**
  *

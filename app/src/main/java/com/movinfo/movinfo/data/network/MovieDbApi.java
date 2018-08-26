@@ -14,7 +14,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class MovieDbApi {
-    private MovieDbApi() {}
+    private MovieDbApi() {
+    }
 
     public static MovieDbService getInstance(int page) {
         Retrofit retrofit;

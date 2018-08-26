@@ -1,4 +1,4 @@
-package com.movinfo.movinfo.ui.movies.view.settings;
+package com.movinfo.movinfo.ui.movies.list.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

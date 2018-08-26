@@ -8,7 +8,6 @@ import com.movinfo.movinfo.ui.splash.presenter.SplashMvpPresenter;
 import com.movinfo.movinfo.ui.splash.presenter.SplashPresenter;
 import com.movinfo.movinfo.ui.splash.view.SplashMvpView;
 
-
 import dagger.Module;
 import dagger.Provides;
 
