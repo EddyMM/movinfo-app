@@ -30,12 +30,14 @@ import com.squareup.picasso.Picasso;
 public class MoviesDetailFragment extends Fragment {
     private static final String TAG = MoviesDetailFragment.class.getSimpleName();
 
+    private ActionBar actionBar;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        ActionBar actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
+        actionBar = ((AppCompatActivity) requireActivity()).getSupportActionBar();
 
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -50,8 +52,15 @@ public class MoviesDetailFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.movies_detail_fragment, container, false);
 
-        //Bind UI
+        setupUI(v, movie);
 
+        return v;
+    }
+
+    /**
+     * Binds UI with the movie data
+     */
+    private void setupUI(View v, Movie movie) {
         TextView movieTitleTextView = v.findViewById(R.id.movieDetailsTitleTextView);
         TextView movieSynopsisTextView = v.findViewById(R.id.movieSynopsisTextView);
         TextView releaseDateTextView = v.findViewById(R.id.releaseDateTextView);
@@ -93,8 +102,6 @@ public class MoviesDetailFragment extends Fragment {
         } else {
             Log.w(TAG, "Movie in Details screen is null");
         }
-
-        return v;
     }
 
     @Override
