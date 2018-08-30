@@ -17,8 +17,6 @@ public interface MoviesListMvpView {
 
     void hideProgressBar();
 
-    boolean isInternetConnected();
-
     void showNoInternetConnectionMessage();
 
     void removeNoInternetConnectionMessage();

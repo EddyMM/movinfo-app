@@ -1,10 +1,7 @@
 package com.movinfo.movinfo.ui.movies.list.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,6 +24,7 @@ import com.movinfo.movinfo.ui.movies.list.presenter.MoviesListAdapter;
 import com.movinfo.movinfo.ui.movies.list.presenter.MoviesListPresenter;
 import com.movinfo.movinfo.ui.movies.list.settings.SettingsActivity;
 import com.movinfo.movinfo.utils.Constants;
+import com.movinfo.movinfo.utils.NetworkUtils;
 
 import java.util.List;
 
@@ -121,21 +119,6 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         mMoviesListProgressBar.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public boolean isInternetConnected() {
-        ConnectivityManager cm =
-                (ConnectivityManager) requireActivity().getSystemService(
-                        Context.CONNECTIVITY_SERVICE);
-
-
-        NetworkInfo activeNetwork = null;
-        if (cm != null) {
-            activeNetwork = cm.getActiveNetworkInfo();
-        }
-        return activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
-    }
-
     /**
      * Displays a SnackBar prompting user to connect to the internet in order to load movies
      */
@@ -149,7 +132,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
                     requireActivity().findViewById(R.id.single_fragment),
                     getString(R.string.no_internet_connection_message), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.retry), (v) -> {
-                        if (!isInternetConnected()) {
+                        if (!NetworkUtils.isInternetConnected(requireContext())) {
                             retryAttempted = true;
                             showNoInternetConnectionMessage();
                             return;
@@ -230,7 +213,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         setIsLoadingMovies(true);
 
         // Ensure device is connected to the internet
-        if (!isInternetConnected()) {
+        if (!NetworkUtils.isInternetConnected(requireContext())) {
             setIsLoadingMovies(false);
             showNoInternetConnectionMessage();
             return;
