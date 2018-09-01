@@ -1,5 +1,6 @@
 package com.movinfo.movinfo.ui.movies.list.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -47,6 +48,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         SharedPreferences.OnSharedPreferenceChangeListener,
         LoaderManager.LoaderCallbacks<Response<MoviesResponse>> {
     private static final int MOVIES_LIST_LOADER_MANAGER_ID = 17;
+    private static final String MOVIES_LIST_SORT_CRITERIA = "SortCriteria";
 
     @Inject
     MoviesListPresenter<MoviesListMvpView> mMoviesListPresenter;
@@ -246,13 +248,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         // Dismiss the no internet connection if it is shown
         removeNoInternetConnectionMessage();
 
-        if (mSortCriteria.equals(getString(R.string.sort_by_rating_value))) {
-            // Fetch top rated movies
-            mMoviesListPresenter.onFetchTopRatedMovies();
-        } else {
-            // Fetch popular movies by default
-            mMoviesListPresenter.onFetchPopularMovies();
-        }
+        mMoviesListPresenter.onFetchMovies();
     }
 
     /**
@@ -287,23 +283,48 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
      * Use Loader Manager to load popular movies
      */
     @Override
-    public void loadPopularMovies() {
+    public void loadMovies() {
         LoaderManager loaderManager = requireActivity().getSupportLoaderManager();
         Loader loader = loaderManager.getLoader(MOVIES_LIST_LOADER_MANAGER_ID);
 
-
+        Bundle bundle = new Bundle();
+        bundle.putString(MOVIES_LIST_SORT_CRITERIA, mSortCriteria);
 
         if (loader == null) {
-            loaderManager.initLoader(MOVIES_LIST_LOADER_MANAGER_ID, null, this);
+            loaderManager.initLoader(MOVIES_LIST_LOADER_MANAGER_ID, bundle, this);
         } else {
-            loaderManager.restartLoader(MOVIES_LIST_LOADER_MANAGER_ID, null, this);
+            loaderManager.restartLoader(MOVIES_LIST_LOADER_MANAGER_ID, bundle, this);
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     @NonNull
     @Override
-    public Loader<Response<MoviesResponse>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new MoviesListLoader(requireContext());
+    public Loader<Response<MoviesResponse>> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<Response<MoviesResponse>>(requireContext()) {
+            @Override
+            protected void onStartLoading() {
+                super.onStartLoading();
+                showProgressBar();
+
+                forceLoad();
+            }
+
+            @Nullable
+            @Override
+            public Response<MoviesResponse> loadInBackground() {
+                String sortCriteria = args.getString(MOVIES_LIST_SORT_CRITERIA,
+                        getString(R.string.sort_by_popularity_value));
+
+                if (sortCriteria.equals(getString(R.string.sort_by_rating_value))) {
+                    // Fetch top rated movies
+                    return mMoviesListPresenter.getTopRatedMovies();
+                } else {
+                    // Fetch popular movies by default
+                    return mMoviesListPresenter.getPopularMovies();
+                }
+            }
+        };
     }
 
     @Override
@@ -316,25 +337,5 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
     @Override
     public void onLoaderReset(@NonNull Loader<Response<MoviesResponse>> loader) {
 
-    }
-
-    private class MoviesListLoader extends AsyncTaskLoader<Response<MoviesResponse>> {
-        MoviesListLoader(@NonNull Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onStartLoading() {
-            super.onStartLoading();
-            showProgressBar();
-
-            forceLoad();
-        }
-
-        @Nullable
-        @Override
-        public Response<MoviesResponse> loadInBackground() {
-            return mMoviesListPresenter.getPopularMovies();
-        }
     }
 }

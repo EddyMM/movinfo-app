@@ -10,7 +10,6 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -51,10 +50,15 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void getTopRatedMovies(Callback<MoviesResponse> topRatedMoviesCallback, int page) {
+    public Response<MoviesResponse> getTopRatedMovies(int page) {
         MovieDbService movieDbService = MovieDbApi.getInstance(page);
 
         Call<MoviesResponse> topRatedMoviesCall = movieDbService.getTopRatedMovies();
-        topRatedMoviesCall.enqueue(topRatedMoviesCallback);
+        try {
+            return topRatedMoviesCall.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

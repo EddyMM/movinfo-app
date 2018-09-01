@@ -15,13 +15,13 @@ public interface MoviesListMvpPresenter<MoviesListView extends MoviesListMvpView
 
     void refetchMovies();
 
-    void onFetchPopularMovies();
-
     Response<MoviesResponse> getPopularMovies();
-
-    void onFetchTopRatedMovies();
 
     void onSettingsClick();
 
     void onFinishedLoadingMovies(Response<MoviesResponse> moviesResponse);
+
+    void onFetchMovies();
+
+    Response<MoviesResponse> getTopRatedMovies();
 }
