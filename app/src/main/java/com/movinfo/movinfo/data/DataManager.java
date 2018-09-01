@@ -3,6 +3,7 @@ package com.movinfo.movinfo.data;
 import com.movinfo.movinfo.data.network.models.MoviesResponse;
 
 import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  *
@@ -14,8 +15,8 @@ public interface DataManager {
 
     boolean wasSplashScreenSeen();
 
-    void getPopularMovies(Callback<MoviesResponse> popularMoviesCallback, int page);
+    Response<MoviesResponse> getPopularMovies(int page);
 
-    void getTopRatedMovies(Callback<MoviesResponse> topRatedMoviesCallback, int page);
+    Response<MoviesResponse> getTopRatedMovies(int page);
 
 }
