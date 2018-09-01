@@ -47,7 +47,7 @@ public class MoviesDetailFragment extends Fragment {
 
         Movie movie = null;
         if (intent != null) {
-            movie = (Movie) intent.getSerializableExtra(MoviesDetailActivity.MOVIE_INTENT_EXTRA);
+            movie = intent.getParcelableExtra(MoviesDetailActivity.MOVIE_INTENT_EXTRA);
         }
 
         View v = inflater.inflate(R.layout.movies_detail_fragment, container, false);

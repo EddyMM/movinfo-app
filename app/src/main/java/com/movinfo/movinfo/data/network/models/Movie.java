@@ -1,8 +1,10 @@
 package com.movinfo.movinfo.data.network.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,7 +13,7 @@ import java.util.Date;
  *
  */
 
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
     @SerializedName("poster_url")
     private String posterUrl;
     @SerializedName("vote_count")
@@ -130,4 +132,68 @@ public class Movie implements Serializable {
         sf.applyLocalizedPattern("E, MMM dd, yyyy");
         return sf.format(releaseDate);
     }
+
+    private Movie(Parcel in) {
+        posterUrl = in.readString();
+        voteCount = in.readInt();
+        movieId = in.readString();
+        voteAverage = in.readFloat();
+        title = in.readString();
+        popularity = in.readFloat();
+        posterPath = in.readString();
+        originalLanguage = in.readString();
+        originalTitle = in.readString();
+        if (in.readByte() == 1) {
+            genreIds = new ArrayList<>();
+            in.readList(genreIds, String.class.getClassLoader());
+        } else {
+            genreIds = null;
+        }
+        backdropPath = in.readString();
+        adult = in.readByte() != 0;
+        overview = in.readString();
+        long tmpReleaseDate = in.readLong();
+        releaseDate = tmpReleaseDate != -1 ? new Date(tmpReleaseDate) : null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(posterUrl);
+        dest.writeInt(voteCount);
+        dest.writeString(movieId);
+        dest.writeFloat(voteAverage);
+        dest.writeString(title);
+        dest.writeFloat(popularity);
+        dest.writeString(posterPath);
+        dest.writeString(originalLanguage);
+        dest.writeString(originalTitle);
+        if (genreIds == null) {
+            dest.writeByte((byte) (0));
+        } else {
+            dest.writeByte((byte) (1));
+            dest.writeList(genreIds);
+        }
+        dest.writeString(backdropPath);
+        dest.writeByte((byte) (adult ? 1 : 0));
+        dest.writeString(overview);
+        dest.writeLong(releaseDate != null ? releaseDate.getTime() : -1L);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }
