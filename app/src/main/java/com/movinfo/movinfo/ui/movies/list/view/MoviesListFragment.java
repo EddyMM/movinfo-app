@@ -1,5 +1,6 @@
 package com.movinfo.movinfo.ui.movies.list.view;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +24,7 @@ import android.widget.ProgressBar;
 
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
+import com.movinfo.movinfo.data.network.models.MoviesResponse;
 import com.movinfo.movinfo.ui.movies.list.presenter.MoviesListAdapter;
 import com.movinfo.movinfo.ui.movies.list.presenter.MoviesListPresenter;
 import com.movinfo.movinfo.ui.movies.list.settings.SettingsActivity;
@@ -30,6 +35,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
@@ -37,7 +43,10 @@ import timber.log.Timber;
  */
 
 public class MoviesListFragment extends Fragment implements MoviesListMvpView,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        LoaderManager.LoaderCallbacks<Response<MoviesResponse>> {
+    private static final int MOVIES_LIST_LOADER_MANAGER_ID = 17;
+    private static final String MOVIES_LIST_SORT_CRITERIA = "SortCriteria";
 
     @Inject
     MoviesListPresenter<MoviesListMvpView> mMoviesListPresenter;
@@ -222,13 +231,7 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
         // Dismiss the no internet connection if it is shown
         removeNoInternetConnectionMessage();
 
-        if (mSortCriteria.equals(getString(R.string.sort_by_rating_value))) {
-            // Fetch top rated movies
-            mMoviesListPresenter.onFetchTopRatedMovies();
-        } else {
-            // Fetch popular movies by default
-            mMoviesListPresenter.onFetchPopularMovies();
-        }
+        mMoviesListPresenter.onFetchMovies();
     }
 
     /**
@@ -257,5 +260,65 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
                 }
             }
         }
+    }
+
+    /**
+     * Use Loader Manager to load popular movies
+     */
+    @Override
+    public void loadMovies() {
+        LoaderManager loaderManager = requireActivity().getSupportLoaderManager();
+        Loader loader = loaderManager.getLoader(MOVIES_LIST_LOADER_MANAGER_ID);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(MOVIES_LIST_SORT_CRITERIA, mSortCriteria);
+
+        if (loader == null) {
+            loaderManager.initLoader(MOVIES_LIST_LOADER_MANAGER_ID, bundle, this);
+        } else {
+            loaderManager.restartLoader(MOVIES_LIST_LOADER_MANAGER_ID, bundle, this);
+        }
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    @NonNull
+    @Override
+    public Loader<Response<MoviesResponse>> onCreateLoader(int id, Bundle args) {
+        return new AsyncTaskLoader<Response<MoviesResponse>>(requireContext()) {
+            @Override
+            protected void onStartLoading() {
+                super.onStartLoading();
+                showProgressBar();
+
+                forceLoad();
+            }
+
+            @Nullable
+            @Override
+            public Response<MoviesResponse> loadInBackground() {
+                String sortCriteria = args.getString(MOVIES_LIST_SORT_CRITERIA,
+                        getString(R.string.sort_by_popularity_value));
+
+                if (sortCriteria.equals(getString(R.string.sort_by_rating_value))) {
+                    // Fetch top rated movies
+                    return mMoviesListPresenter.getTopRatedMovies();
+                } else {
+                    // Fetch popular movies by default
+                    return mMoviesListPresenter.getPopularMovies();
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Response<MoviesResponse>> loader,
+            Response<MoviesResponse> moviesResponse) {
+        mMoviesListPresenter.onFinishedLoadingMovies(moviesResponse);
+        mMoviesListPresenter.moveToNextPage();
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Response<MoviesResponse>> loader) {
+
     }
 }

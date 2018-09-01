@@ -23,6 +23,8 @@ public interface MoviesListMvpView {
 
     void setIsLoadingMovies(boolean isLoadingMovies);
 
+    void loadMovies();
+
     void resetAdapter();
 
     void openSettings();
