@@ -44,11 +44,6 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
         mMoviesListView.resetAdapter();
     }
 
-    @Override
-    public void onFetchPopularMovies() {
-        mMoviesListView.loadMovies();
-    }
-
     public Response<MoviesResponse> getPopularMovies() {
         return getDataManager().getPopularMovies(mNextPage);
     }
