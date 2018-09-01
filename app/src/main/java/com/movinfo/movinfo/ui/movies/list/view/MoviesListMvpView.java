@@ -25,6 +25,8 @@ public interface MoviesListMvpView {
 
     void setIsLoadingMovies(boolean isLoadingMovies);
 
+    void loadPopularMovies();
+
     void resetAdapter();
 
     void openSettings();

@@ -10,6 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +26,7 @@ import android.widget.ProgressBar;
 
 import com.movinfo.movinfo.R;
 import com.movinfo.movinfo.data.network.models.Movie;
+import com.movinfo.movinfo.data.network.models.MoviesResponse;
 import com.movinfo.movinfo.ui.movies.list.presenter.MoviesListAdapter;
 import com.movinfo.movinfo.ui.movies.list.presenter.MoviesListPresenter;
 import com.movinfo.movinfo.ui.movies.list.settings.SettingsActivity;
@@ -32,6 +36,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
@@ -39,7 +44,9 @@ import timber.log.Timber;
  */
 
 public class MoviesListFragment extends Fragment implements MoviesListMvpView,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener,
+        LoaderManager.LoaderCallbacks<Response<MoviesResponse>> {
+    private static final int MOVIES_LIST_LOADER_MANAGER_ID = 17;
 
     @Inject
     MoviesListPresenter<MoviesListMvpView> mMoviesListPresenter;
@@ -273,6 +280,61 @@ public class MoviesListFragment extends Fragment implements MoviesListMvpView,
                     fetchNextPageOfMovies();
                 }
             }
+        }
+    }
+
+    /**
+     * Use Loader Manager to load popular movies
+     */
+    @Override
+    public void loadPopularMovies() {
+        LoaderManager loaderManager = requireActivity().getSupportLoaderManager();
+        Loader loader = loaderManager.getLoader(MOVIES_LIST_LOADER_MANAGER_ID);
+
+
+
+        if (loader == null) {
+            loaderManager.initLoader(MOVIES_LIST_LOADER_MANAGER_ID, null, this);
+        } else {
+            loaderManager.restartLoader(MOVIES_LIST_LOADER_MANAGER_ID, null, this);
+        }
+    }
+
+    @NonNull
+    @Override
+    public Loader<Response<MoviesResponse>> onCreateLoader(int id, @Nullable Bundle args) {
+        return new MoviesListLoader(requireContext());
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Response<MoviesResponse>> loader,
+            Response<MoviesResponse> moviesResponse) {
+        mMoviesListPresenter.onFinishedLoadingMovies(moviesResponse);
+        mMoviesListPresenter.moveToNextPage();
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Response<MoviesResponse>> loader) {
+
+    }
+
+    private class MoviesListLoader extends AsyncTaskLoader<Response<MoviesResponse>> {
+        MoviesListLoader(@NonNull Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onStartLoading() {
+            super.onStartLoading();
+            showProgressBar();
+
+            forceLoad();
+        }
+
+        @Nullable
+        @Override
+        public Response<MoviesResponse> loadInBackground() {
+            return mMoviesListPresenter.getPopularMovies();
         }
     }
 }

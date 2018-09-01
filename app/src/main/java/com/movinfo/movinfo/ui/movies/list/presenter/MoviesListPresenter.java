@@ -33,7 +33,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
         super(dataManager);
     }
 
-    private void moveToNextPage() {
+    public void moveToNextPage() {
         mNextPage++;
     }
 
@@ -50,40 +50,7 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
 
     @Override
     public void onFetchPopularMovies() {
-        mMoviesListView.showProgressBar();
-
-        getDataManager().getPopularMovies(
-                new Callback<MoviesResponse>() {
-                    @Override
-                    public void onResponse(@NonNull Call<MoviesResponse> call,
-                            @NonNull Response<MoviesResponse> response) {
-                        Timber.d(response.toString());
-
-                        mMoviesListView.setIsLoadingMovies(false);
-
-                        MoviesResponse popularMoviesResponse = response.body();
-                        if (popularMoviesResponse != null) {
-                            mMoviesListView.hideProgressBar();
-                            List<Movie> movies = popularMoviesResponse.getResults();
-                            mMoviesListView.displayMovies(movies);
-                        } else {
-                            Timber.e("No movies were fetched");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<MoviesResponse> call,
-                            @NonNull Throwable t) {
-                        mMoviesListView.hideProgressBar();
-
-                        mMoviesListView.setIsLoadingMovies(false);
-                        Timber.e("Error fetching popular movies: " + t.getMessage());
-                        t.printStackTrace();
-                    }
-                }
-                , mNextPage);
-
-        moveToNextPage();
+        mMoviesListView.loadPopularMovies();
     }
 
     @Override
@@ -124,8 +91,35 @@ public class MoviesListPresenter<MoviesListView extends MoviesListMvpView>
         moveToNextPage();
     }
 
+    public Response<MoviesResponse> getPopularMovies() {
+        return getDataManager().getPopularMovies(mNextPage);
+    }
+
     @Override
     public void onSettingsClick() {
         mMoviesListView.openSettings();
+    }
+
+    @Override
+    public void onFinishedLoadingMovies(Response<MoviesResponse> moviesResponse) {
+        if (moviesResponse.isSuccessful()) {
+            Timber.d(moviesResponse.toString());
+
+            mMoviesListView.setIsLoadingMovies(false);
+
+            MoviesResponse popularMoviesResponse = moviesResponse.body();
+            if (popularMoviesResponse != null) {
+                mMoviesListView.hideProgressBar();
+                List<Movie> movies = popularMoviesResponse.getResults();
+                mMoviesListView.displayMovies(movies);
+            } else {
+                Timber.e("No movies were fetched");
+            }
+        } else {
+            mMoviesListView.hideProgressBar();
+
+            mMoviesListView.setIsLoadingMovies(false);
+            Timber.e("Error fetching popular movies");
+        }
     }
 }

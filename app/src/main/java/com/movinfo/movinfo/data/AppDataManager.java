@@ -5,10 +5,13 @@ import com.movinfo.movinfo.data.network.MovieDbService;
 import com.movinfo.movinfo.data.network.models.MoviesResponse;
 import com.movinfo.movinfo.data.preferences.PreferencesHelper;
 
+import java.io.IOException;
+
 import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  *
@@ -34,11 +37,17 @@ public class AppDataManager implements DataManager {
     }
 
     @Override
-    public void getPopularMovies(Callback<MoviesResponse> popularMoviesCallback, int page) {
+    public Response<MoviesResponse> getPopularMovies(int page) {
         MovieDbService movieDbService = MovieDbApi.getInstance(page);
 
         Call<MoviesResponse> popularMoviesCall = movieDbService.getPopularMovies();
-        popularMoviesCall.enqueue(popularMoviesCallback);
+        try {
+            return popularMoviesCall.execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+//        popularMoviesCall.enqueue(popularMoviesCallback);
     }
 
     @Override
